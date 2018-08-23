@@ -1,5 +1,5 @@
 # Clone-User-in-Salesforce
-Clone User in Salesforce with Public Group Membership and Permission Set Assignment
+Clone User in Salesforce with Public Group Membership and Permission Set Assignments.
 
 1. Create a custom field "Cloned From" in User sObject to store the id of User from which the new user is being cloned from.
    - This step is necessary because the value in this custom field will help us to clone the Public Group Membership and Permission Set        Assignment.
