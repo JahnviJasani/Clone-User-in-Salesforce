@@ -1,0 +1,81 @@
+<apex:page showHeader="false">
+     <script type="text/javascript">
+
+    function cloneUser(){
+        
+        var parentUrl=window.location.href.split('=');
+        var cloneUserFromId = parentUrl[parentUrl.length-1];
+        var firstName =  document.getElementById('{!$Component.CloneUserForm.CloneUserPageBlock.CloneUserPageBlockSection.firstname}').value;
+        var lastName = document.getElementById('{!$Component.CloneUserForm.CloneUserPageBlock.CloneUserPageBlockSection.lastname}').value;
+        var emailAddress = document.getElementById('{!$Component.CloneUserForm.CloneUserPageBlock.CloneUserPageBlockSection.email}').value;
+        
+        if(lastName != null && lastName != undefined && lastName.trim().length > 0){
+            if(emailAddress != null && emailAddress.trim().length > 0){
+                //email validation.
+                 if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailAddress)){
+                    var queryParams = "";
+                    queryParams += "&name_firstName=" + firstName;
+                    queryParams += "&name_lastName=" + lastName;
+                    queryParams += "&Email=" + emailAddress;
+                    queryParams += "&Username=" + emailAddress;
+                    queryParams += "&Alias=" + generateAlias(firstName,lastName).toLowerCase();
+                    queryParams += "&CommunityNickname=" + generateNickName(firstName,lastName);
+                    queryParams += "&FederationIdentifier=" + generateFedID(firstName,lastName).toLowerCase();    
+                    queryParams += "&{!$Label.UserClonedFromID}=" + cloneUserFromId;
+                    queryParams += "&Phone=";
+                    queryParams += "&Extension=";
+                    queryParams += "&Fax=";
+                    queryParams += "&MobilePhone=";
+                    queryParams += "&EmployeeNumber=";                    
+                    
+                    var url = '/'+cloneUserFromId+'/e?clone=1&retURL=%2F005%3FretURL%3D%252Fui%252Fsetup%252FSetup%253Fsetupid%253DUsers%26setupid%3DManageUsers';
+                    
+                    window.opener.location.href = url + queryParams;
+                    self.close();             
+                }
+                else{
+                    alert("Email Address is invalid");
+                }
+            }
+            else{
+                alert("Email Address cannot be blank");
+            }
+        }
+        else{
+            alert("Last Name cannot be blank");
+        }
+    }
+   
+    function generateFedID(fn,ln){
+        return fn + "_" + ln;
+    }
+    
+    function generateAlias(fn,ln){
+        if(ln.length <= 7){
+            return fn.substring(0,1) + ln;
+        }
+        else{
+            return fn.substring(0,1) + ln.substring(0,7);
+        }
+    }
+    
+    function generateNickName(fn,ln){
+        return fn + "." + ln;
+    }
+    
+    </script>      
+    <apex:form id="CloneUserForm">
+       <apex:sectionHeader title="Clone User"/>
+        <apex:pageBlock id="CloneUserPageBlock" title="New User">
+            <apex:pageBlockSection id="CloneUserPageBlockSection" title="Add User details">
+                <apex:inputText id="firstname" label="First Name" />
+                <apex:inputText id="lastname" label="Last Name" />
+                <apex:inputText id="email" label="Email" />
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton onclick="cloneUser()" value="Next"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+    
+</apex:page>
